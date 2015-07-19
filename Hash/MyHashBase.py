@@ -7,7 +7,8 @@ class StringBucket:
     private data members, both class and instance, to help these functions.
     """ 
     
-    def __init__(self):
+    def __init__(self, maxCollisions = -1):
+        self.__maxCol = maxCollisions
         self.__numItems = 0
     
     def setKeyVal(key, val):
@@ -17,8 +18,8 @@ class StringBucket:
         wasInserted = self.setKeyVal(key, val) #Zero means value was not inserted
         if wasInserted == 1: #Was inserted perfectly
             self.__numItems += 1
-        elif wasInserted == -1: #Was inserted, but bucket is full
-            self.__numItems += 1 
+        if self.__maxCol != -1 and self.__numItems > self.__maxCol:
+            return -1
         return wasInserted
 
     def search(self, key):
@@ -31,9 +32,9 @@ class StringBucket:
         return self.__numItems
     
 class StringHashTable:
-    def __init__(self, hashFunction, bucketType, minNumBuckets = 1, maxCollisions = 3):
+    def __init__(self, hashFunction, bucketType, minNumBuckets = 1, maxCollisions = -1):
         self.hashFunc = hashFunction
-        self.lBuckets = [bucketType() for x in range(minNumBuckets)]
+        self.lBuckets = [bucketType(maxCollisions) for x in range(minNumBuckets)]
         self.numBuckets = minNumBuckets
         pass
 
