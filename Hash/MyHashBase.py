@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import copy
 class StringBucket:
     """
     Abstract class for a string hash table's bucket. It only implements all necessary 
@@ -7,10 +7,13 @@ class StringBucket:
     private data members, both class and instance, to help these functions.
     """ 
     
-    def __init__(self, maxCollisions = -1):
+    def __init__(self, maxCollisions):
         self.index = 0
         self.__maxCol = maxCollisions
         self.__numItems = 0
+        
+    def __iter__(self):
+        self.index = 0        
         
     def next(self):
         self.index = 0
@@ -39,6 +42,8 @@ class StringBucket:
 class StringHashTable:
     def __init__(self, hashFunction, bucketType, minNumBuckets = 1, maxCollisions = -1):
         self.index = 0
+        self.bucketType = bucketType
+        self.maxCol = maxCollisions
         self.hashFunc = hashFunction
         self.lBuckets = [bucketType(maxCollisions) for x in range(minNumBuckets)]
         self.numBuckets = minNumBuckets
@@ -56,8 +61,19 @@ class StringHashTable:
                 self.index += 1
         raise StopIteration
 
-    def grow():
-        pass
+    def grow(self):
+        tempBuckets = copy.deepcopy(self.lBuckets)
+        self.minNumBuckets *= 2
+        self.lBuckets = [self.bucketType(self.maxCol) for x in range(self.minNumBuckets)]
+        for bucket in tempBuckets:
+            iter(bucket)
+            while True:
+                try:
+                    key, val = bucket.next
+                    self.insert(key, val)
+                except StopIteration:
+                    iter(bucket)
+                    break
     
     def insert(self, key, value):
         hashedKey = self.hashFunc(key)
