@@ -8,8 +8,13 @@ class StringBucket:
     """ 
     
     def __init__(self, maxCollisions = -1):
+        self.index = 0
         self.__maxCol = maxCollisions
         self.__numItems = 0
+        
+    def next(self):
+        self.index = 0
+        raise StopIteration
     
     def setKeyVal(key, val):
         return 0
@@ -33,10 +38,23 @@ class StringBucket:
     
 class StringHashTable:
     def __init__(self, hashFunction, bucketType, minNumBuckets = 1, maxCollisions = -1):
+        self.index = 0
         self.hashFunc = hashFunction
         self.lBuckets = [bucketType(maxCollisions) for x in range(minNumBuckets)]
         self.numBuckets = minNumBuckets
         pass
+
+    def __iter__(self):
+        self.index = 0
+        return self
+        
+    def next(self):
+        while (self.index < self.numBuckets):
+            try:
+                return self.lBuckets[self.index].next()
+            except StopIteration:
+                self.index += 1
+        raise StopIteration
 
     def grow():
         pass
@@ -50,6 +68,3 @@ class StringHashTable:
             
     def numItems(self):
         return sum([b.getNumItems for b in self.lBuckets])
-    
-    def enumerateItems():
-        pass
