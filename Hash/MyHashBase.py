@@ -40,7 +40,9 @@ class StringBucket:
         return self.__numItems
     
 class StringHashTable:
-    def __init__(self, hashFunction, bucketType, minNumBuckets = 1, maxCollisions = -1):
+    def __init__(self, hashFunction, bucketType, minNumBuckets = 1, maxCollisions = -1, willFill = False, loadFactorThresh = 1.5):
+        self.willFill = willFill
+        self.loadFactorThresh = 1.5
         self.index = 0
         self.bucketType = bucketType
         self.maxCol = maxCollisions
@@ -63,8 +65,8 @@ class StringHashTable:
 
     def grow(self):
         tempBuckets = copy.deepcopy(self.lBuckets)
-        self.minNumBuckets *= 2
-        self.lBuckets = [self.bucketType(self.maxCol) for x in range(self.minNumBuckets)]
+        self.numBuckets *= 2
+        self.lBuckets = [self.bucketType(self.maxCol) for x in range(self.numBuckets)]
         for bucket in tempBuckets:
             iter(bucket)
             while True:
@@ -74,8 +76,19 @@ class StringHashTable:
                 except StopIteration:
                     iter(bucket)
                     break
+
+    def loadFactor(self):
+        return float(self.numItems)/self.numBuckets
+        
+    def isTooFull(self):
+        if self.willFill and self.loadFactor() > self.loadFactorThresh:
+            return True
+        else:
+            return False
     
     def insert(self, key, value):
+        if self.isTooFull:
+            self.grow()
         hashedKey = self.hashFunc(key)
         i = hashedKey % self.numBuckets
         wasInserted = self.lBuckets[i].insert(key, value)
