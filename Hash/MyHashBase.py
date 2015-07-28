@@ -31,9 +31,12 @@ class StringBucket:
         return wasInserted
 
     def search(self, key):
+        return False
+    
+    def getVal(self, key):
         pass
     
-    def delete(self):
+    def delete(self, key):
         pass
     
     def getNumItems(self):
