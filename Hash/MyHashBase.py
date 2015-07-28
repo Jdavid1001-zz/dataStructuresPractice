@@ -7,7 +7,7 @@ class StringBucket:
     private data members, both class and instance, to help these functions.
     """ 
     
-    def __init__(self, maxCollisions):
+    def __init__(self, maxCollisions = -1):
         self.index = 0
         self.__maxCol = maxCollisions
         self.__numItems = 0
