@@ -47,7 +47,19 @@ class SinglyLinkedList(StringBucket):
                 return False
     
     def delete(self, key):
-        pass
+        if self.head.getKey == key:
+            self.head = self.head.next
+        else:
+            prevNode = self.head
+            currNode = self.head.getNextNode()
+            while currNode.getKey() != key:
+                prevNode = currNode
+                currNode = currNode.getNextNode()
+            if currNode.getKey == key:
+                prevNode.setNextNode(currNode.getNextNode())
+            else:
+                return False
+        return True
         
     def setKeyVal(self, key, val):
         if not self.head:
@@ -55,8 +67,8 @@ class SinglyLinkedList(StringBucket):
         else:
             currNode = self.head
             collisions = 1
-            while currNode.getNextNode:
-                currNode = currNode.getNextNode
+            while currNode.getNextNode():
+                currNode = currNode.getNextNode()
                 collisions += 1
             currNode.setNextNode(SinglyLinkedNode(key, val))
 
