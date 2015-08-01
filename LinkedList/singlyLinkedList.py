@@ -73,5 +73,14 @@ class SinglyLinkedList(StringBucket):
             currNode.setNextNode(SinglyLinkedNode(key, val))
 
     def next(self):
-        self.index = 0
-        raise StopIteration
+        if self.index == self.__numItems:
+            return StopIteration
+        elif self.index == 0:
+            self.index += 1
+            self.nextNodeToReturn = self.head.getNextNode
+            return self.head
+        else:
+            self.index += 1
+            currentNodeToReturn = self.nextNodeToReturn
+            self.nextNodeToReturn = currentNodeToReturn.getNextNode()
+            return currentNodeToReturn
